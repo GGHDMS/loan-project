@@ -102,4 +102,20 @@ class CounselServiceTest {
         assertThat(response.getName()).isEqualTo(request.getName());
 
     }
+
+    @Test
+    void 삭제를_요청했을때_아이다가존재하면_소프트삭제한다() {
+        Long counselId = 1L;
+
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        when(counselRepository.findById(counselId)).thenReturn(Optional.ofNullable(entity));
+        when(counselRepository.save(any())).thenReturn(entity);
+
+        counselService.delete(counselId);
+
+        assertThat(entity.getIsDeleted()).isTrue();
+    }
 }
