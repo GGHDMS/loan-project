@@ -81,4 +81,25 @@ class CounselServiceTest {
         assertThatThrownBy(() -> counselService.get(counselId))
                 .isInstanceOf(BaseException.class);
     }
+
+    @Test
+    void 수정요청을_받았을때_아이디가_존재하면_수정하고_응답을준다() {
+        Long findId = 1L;
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .name("Member Kim")
+                .build();
+
+        Request request = Request.builder()
+                .name("Member Heo")
+                .build();
+
+        when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+        when(counselRepository.save(any())).thenReturn(entity);
+
+        Response response = counselService.update(findId, request);
+        assertThat(response.getCounselId()).isEqualTo(findId);
+        assertThat(response.getName()).isEqualTo(request.getName());
+
+    }
 }

@@ -34,4 +34,23 @@ public class CounselServiceImpl implements CounselService{
         Counsel counsel = counselRepository.findById(counselId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
         return modelMapper.map(counsel, Response.class);
     }
+
+    @Override
+    public Response update(Long counselId, Request request) {
+        Counsel counsel = counselRepository.findById(counselId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        counsel.setName(request.getName());
+        counsel.setCellPhone(request.getCellPhone());
+        counsel.setMemo(request.getMemo());
+        counsel.setEmail(request.getEmail());
+        counsel.setAddress(request.getAddress());
+        counsel.setAddressDetail(request.getAddressDetail());
+        counsel.setZipcode(request.getZipcode());
+
+        counselRepository.save(counsel);
+
+        return modelMapper.map(counsel, Response.class);
+    }
+
+
 }
