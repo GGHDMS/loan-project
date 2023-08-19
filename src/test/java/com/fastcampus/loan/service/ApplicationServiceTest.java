@@ -72,4 +72,27 @@ class ApplicationServiceTest {
 
     }
 
+    @Test
+    void 요청DTO와_함께_존재하는아이디로_요청이오면_업데이트해야한다() {
+        Long applicationId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(applicationId)
+                .hopeAmount(BigDecimal.valueOf(1000000))
+                .applicationId(applicationId)
+                .build();
+
+        Request request = Request.builder()
+                .hopeAmount(BigDecimal.valueOf(50000000))
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.ofNullable(entity));
+        when(applicationRepository.save(any(Application.class))).thenReturn(entity);
+
+        Response response = applicationService.update(applicationId, request);
+
+        assertThat(response.getApplicationId()).isEqualTo(applicationId);
+        assertThat(response.getHopeAmount()).isEqualTo(request.getHopeAmount());
+    }
+
 }
