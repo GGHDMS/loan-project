@@ -26,6 +26,7 @@ public class ApplicationDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
+        private Long applicationId;
         private String name;
         private String cellPhone;
         private String email;

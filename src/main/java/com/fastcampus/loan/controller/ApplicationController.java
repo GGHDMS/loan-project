@@ -3,10 +3,7 @@ package com.fastcampus.loan.controller;
 import com.fastcampus.loan.dto.ResponseDTO;
 import com.fastcampus.loan.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.fastcampus.loan.dto.ApplicationDto.Request;
 import static com.fastcampus.loan.dto.ApplicationDto.Response;
@@ -14,7 +11,7 @@ import static com.fastcampus.loan.dto.ApplicationDto.Response;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/applications")
-public class ApplicationController extends AbstractController{
+public class ApplicationController extends AbstractController {
 
     private final ApplicationService applicationService;
 
@@ -23,5 +20,9 @@ public class ApplicationController extends AbstractController{
         return ok(applicationService.create(request));
     }
 
+    @GetMapping("{applicationId}")
+    public ResponseDTO<Response> get(@PathVariable Long applicationId) {
+        return ok(applicationService.get(applicationId));
+    }
 
 }
