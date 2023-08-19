@@ -95,4 +95,19 @@ class ApplicationServiceTest {
         assertThat(response.getHopeAmount()).isEqualTo(request.getHopeAmount());
     }
 
+    @Test
+    void 존재하는아이디로_삭제요청이오면_삭제한다() {
+        Long applicationId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(applicationId)
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.ofNullable(entity));
+        when(applicationRepository.save(any(Application.class))).thenReturn(entity);
+
+        applicationService.delete(applicationId);
+
+        assertThat(entity.getIsDeleted()).isTrue();
+    }
 }

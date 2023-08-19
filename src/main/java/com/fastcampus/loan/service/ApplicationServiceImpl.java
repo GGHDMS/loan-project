@@ -15,7 +15,7 @@ import static com.fastcampus.loan.dto.ApplicationDto.Response;
 
 @Service
 @RequiredArgsConstructor
-public class ApplicationServiceImpl implements ApplicationService{
+public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ModelMapper modelMapper;
@@ -49,5 +49,14 @@ public class ApplicationServiceImpl implements ApplicationService{
         applicationRepository.save(application);
 
         return modelMapper.map(application, Response.class);
+    }
+
+    @Override
+    public void delete(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        application.setIsDeleted(true);
+
+        applicationRepository.save(application);
     }
 }
