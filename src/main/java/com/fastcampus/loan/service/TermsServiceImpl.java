@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.fastcampus.loan.dto.TermsDto.Request;
 import static com.fastcampus.loan.dto.TermsDto.Response;
 
@@ -26,4 +29,12 @@ public class TermsServiceImpl implements TermsService{
 
         return modelMapper.map(entity, Response.class);
     }
+
+    @Override
+    public List<Response> getAll() {
+        List<Terms> termList = termsRepository.findAll();
+
+        return termList.stream().map(m -> modelMapper.map(m, Response.class)).collect(Collectors.toList());
+    }
+
 }

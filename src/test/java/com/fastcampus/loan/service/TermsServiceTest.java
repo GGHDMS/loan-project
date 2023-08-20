@@ -10,6 +10,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
+
 import static com.fastcampus.loan.dto.TermsDto.Request;
 import static com.fastcampus.loan.dto.TermsDto.Response;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,5 +50,25 @@ class TermsServiceTest {
 
         assertThat(response.getName()).isEqualTo(entity.getName());
         assertThat(response.getTermsDetailUrl()).isEqualTo(entity.getTermsDetailUrl());
+    }
+
+    @Test
+    void 요청이오면_모든약관을_리턴한다() {
+        Terms entity1 = Terms.builder()
+                .name("대출 이용 약관 1")
+                .termsDetailUrl("https://adfadf.com")
+                .build();
+
+        Terms entity2 = Terms.builder()
+                .name("대출 이용 약관 2")
+                .termsDetailUrl("https://adfadf.com")
+                .build();
+
+        when(termsRepository.findAll()).thenReturn(List.of(entity1, entity2));
+
+
+        List<Response> responseList = termsService.getAll();
+
+        assertThat(responseList.size()).isEqualTo(2);
     }
 }
