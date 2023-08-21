@@ -5,8 +5,7 @@ import com.fastcampus.loan.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static com.fastcampus.loan.dto.ApplicationDto.Request;
-import static com.fastcampus.loan.dto.ApplicationDto.Response;
+import static com.fastcampus.loan.dto.ApplicationDto.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +33,11 @@ public class ApplicationController extends AbstractController {
     public ResponseDTO<Void> delete(@PathVariable Long applicationId) {
         applicationService.delete(applicationId);
         return ok();
+    }
+
+    @PostMapping("{applicationId}/terms")
+    public ResponseDTO<Boolean> acceptTerms(@PathVariable Long applicationId, @RequestBody AcceptTerms acceptTerms) {
+        return ok(applicationService.acceptTerms(applicationId, acceptTerms));
     }
 }
 

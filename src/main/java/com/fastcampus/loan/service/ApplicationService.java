@@ -1,7 +1,6 @@
 package com.fastcampus.loan.service;
 
-import static com.fastcampus.loan.dto.ApplicationDto.Request;
-import static com.fastcampus.loan.dto.ApplicationDto.Response;
+import static com.fastcampus.loan.dto.ApplicationDto.*;
 
 public interface ApplicationService {
 
@@ -12,4 +11,6 @@ public interface ApplicationService {
     Response update(Long applicationId, Request request);
 
     void delete(Long applicationId);
+
+    Boolean acceptTerms(Long applicationId, AcceptTerms request);
 }
