@@ -1,11 +1,19 @@
 package com.fastcampus.loan.controller;
 
+import com.fastcampus.loan.dto.FileDto;
 import com.fastcampus.loan.dto.ResponseDTO;
 import com.fastcampus.loan.service.ApplicationService;
 import com.fastcampus.loan.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.fastcampus.loan.dto.ApplicationDto.*;
 
@@ -48,5 +56,24 @@ public class ApplicationController extends AbstractController {
         fileStorageService.save(file);
         return ok();
     }
+
+    @GetMapping("/files")
+    public ResponseEntity<Resource> download(@RequestParam(value = "fileName") String fileName) {
+        Resource file = fileStorageService.load(fileName);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @GetMapping("/files/infos")
+    public ResponseDTO<List<FileDto>> getFileInfos() {
+        List<FileDto> fileInfos = fileStorageService.loadAll().map(path -> {
+            String fileName = path.getFileName().toString();
+            return FileDto.builder()
+                    .name(fileName)
+                    .url(MvcUriComponentsBuilder.fromMethodName(ApplicationController.class, "download", fileName).build().toString())
+                    .build();
+        }).collect(Collectors.toList());
+        return ok(fileInfos);
+    }
+
 }
 
