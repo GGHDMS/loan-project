@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static com.fastcampus.loan.dto.ApplicationDto.GrantAmount;
 import static com.fastcampus.loan.dto.JudgementDto.Request;
 import static com.fastcampus.loan.dto.JudgementDto.Response;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -122,5 +123,31 @@ class JudgementServiceImplTest {
         judgementService.delete(judgementId);
 
         assertThat(judgement.getIsDeleted()).isTrue();
+    }
+
+    @Test
+    void 심사금액부여_요청이들어올때_아이디값들이_존재하면_업데이트한다() {
+        Long judgementId = 1L;
+        Long applicationId = 1L;
+
+        Judgement judgement = Judgement.builder()
+                .judgementId(judgementId)
+                .applicationId(applicationId)
+                .approvalAmount(BigDecimal.valueOf(50000))
+                .build();
+
+        Application application = Application.builder()
+                .applicationId(applicationId)
+                .build();
+
+        when(judgementRepository.findById(judgementId)).thenReturn(Optional.ofNullable(judgement));
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.ofNullable(application));
+        when(applicationRepository.save(any(Application.class))).thenReturn(null);
+
+        GrantAmount grantAmount = judgementService.grant(judgementId);
+        assertThat(grantAmount.getApplicationId()).isEqualTo(judgement.getApplicationId());
+        assertThat(grantAmount.getApprovalAmount()).isEqualTo(judgement.getApprovalAmount());
+
+
     }
 }

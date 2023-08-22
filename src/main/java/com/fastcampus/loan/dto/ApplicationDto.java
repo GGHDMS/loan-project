@@ -46,4 +46,16 @@ public class ApplicationDto {
         List<Long> acceptTermsIds;
     }
 
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GrantAmount{
+        private Long applicationId;
+        private BigDecimal approvalAmount;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+    }
 }
