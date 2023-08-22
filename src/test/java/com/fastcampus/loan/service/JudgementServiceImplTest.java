@@ -12,6 +12,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static com.fastcampus.loan.dto.JudgementDto.Request;
@@ -88,5 +89,23 @@ class JudgementServiceImplTest {
 
         assertThat(response.getApplicationId()).isEqualTo(applicationId);
         assertThat(response.getJudgementId()).isEqualTo(judgementId);
+    }
+
+
+    @Test
+    void 존재하는심사아이디로_수정요청이오면_수정후_응답을준다() {
+        Long judgementId = 1L;
+        Request request = Request.builder()
+                .name("name")
+                .approvalAmount(BigDecimal.valueOf(50000))
+                .build();
+
+        when(judgementRepository.findById(judgementId)).thenReturn(Optional.ofNullable(Judgement.builder().build()));
+        when(judgementRepository.save(any(Judgement.class))).thenReturn(null);
+
+        Response response = judgementService.update(judgementId, request);
+
+        assertThat(response.getName()).isEqualTo(request.getName());
+        assertThat(response.getApprovalAmount()).isEqualTo(request.getApprovalAmount());
     }
 }

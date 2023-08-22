@@ -57,4 +57,15 @@ public class JudgementServiceImpl implements JudgementService{
     private boolean isApplicationNotPresent(Long applicationId) {
         return applicationRepository.findById(applicationId).isEmpty();
     }
+
+    @Override
+    public Response update(Long judgementId, Request request) {
+        Judgement judgement = judgementRepository.findById(judgementId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        judgement.setName(request.getName());
+        judgement.setApprovalAmount(request.getApprovalAmount());
+
+        judgementRepository.save(judgement);
+        return modelMapper.map(judgement, Response.class);
+    }
 }

@@ -2,6 +2,7 @@ package com.fastcampus.loan.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class JudgementDto {
@@ -15,7 +16,7 @@ public class JudgementDto {
     public static class Request {
         private Long applicationId;
         private String name;
-        private String approvalAmount;
+        private BigDecimal approvalAmount;
     }
 
     @Getter
@@ -27,7 +28,7 @@ public class JudgementDto {
         private Long judgementId;
         private Long applicationId;
         private String name;
-        private String approvalAmount;
+        private BigDecimal approvalAmount;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
