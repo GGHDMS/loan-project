@@ -6,4 +6,8 @@ import static com.fastcampus.loan.dto.JudgementDto.Response;
 public interface JudgementService {
 
     Response create(Request request);
+
+    Response get(Long judgementId);
+
+    Response getJudgementOfApplication(Long applicationId);
 }

@@ -56,4 +56,37 @@ class JudgementServiceImplTest {
         assertThat(response.getApplicationId()).isEqualTo(applicationId);
         assertThat(response.getJudgementId()).isEqualTo(judgementId);
     }
+
+    @Test
+    void 심사아이디가_존재하면_심사에관한_응답을준다() {
+        Long judgementId = 1L;
+
+        Judgement judgement = Judgement.builder()
+                .judgementId(judgementId)
+                .build();
+
+        when(judgementRepository.findById(judgementId)).thenReturn(Optional.ofNullable(judgement));
+
+        Response response = judgementService.get(judgementId);
+        assertThat(response.getJudgementId()).isEqualTo(judgementId);
+    }
+
+    @Test
+    void 신청아이디가_존재하면_심사에관한_응답을준다() {
+        Long applicationId = 1L;
+        Long judgementId = 1L;
+
+        Judgement judgement = Judgement.builder()
+                .applicationId(applicationId)
+                .judgementId(judgementId)
+                .build();
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.ofNullable(Application.builder().build()));
+        when(judgementRepository.findByApplicationId(applicationId)).thenReturn(Optional.ofNullable(judgement));
+
+        Response response = judgementService.getJudgementOfApplication(judgementId);
+
+        assertThat(response.getApplicationId()).isEqualTo(applicationId);
+        assertThat(response.getJudgementId()).isEqualTo(judgementId);
+    }
 }
