@@ -108,4 +108,19 @@ class JudgementServiceImplTest {
         assertThat(response.getName()).isEqualTo(request.getName());
         assertThat(response.getApprovalAmount()).isEqualTo(request.getApprovalAmount());
     }
+
+    @Test
+    void 존재하는아이디로_삭제요청이들어오면_삭제한다() {
+        Long judgementId = 1L;
+        Judgement judgement = Judgement.builder()
+                .judgementId(judgementId)
+                .build();
+
+        when(judgementRepository.findById(judgementId)).thenReturn(Optional.ofNullable(judgement));
+        when(judgementRepository.save(any(Judgement.class))).thenReturn(null);
+
+        judgementService.delete(judgementId);
+
+        assertThat(judgement.getIsDeleted()).isTrue();
+    }
 }
