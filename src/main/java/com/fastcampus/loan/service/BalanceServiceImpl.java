@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-import static com.fastcampus.loan.dto.BalanceDto.Request;
-import static com.fastcampus.loan.dto.BalanceDto.Response;
+import static com.fastcampus.loan.dto.BalanceDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +29,25 @@ public class BalanceServiceImpl implements BalanceService{
         BigDecimal entryAmount = request.getEntryAmount();
         balance.setApplicationId(applicationId);
         balance.setBalance(entryAmount);
+
+        balanceRepository.save(balance);
+
+        return modelMapper.map(balance, Response.class);
+    }
+
+    @Override
+    public Response update(Long applicationId, UpdateRequest request) {
+        // balance
+        Balance balance = balanceRepository.findByApplicationId(applicationId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        BigDecimal beforeEntryAmount = request.getBeforeEntryAmount();
+        BigDecimal afterEntryAmount = request.getAfterEntryAmount();
+        BigDecimal updatedBalance = balance.getBalance();
+
+
+        // as-is -> to-be
+        updatedBalance = updatedBalance.subtract(beforeEntryAmount).add(afterEntryAmount);
+        balance.setBalance(updatedBalance);
 
         balanceRepository.save(balance);
 

@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
-import static com.fastcampus.loan.dto.EntryDto.Request;
-import static com.fastcampus.loan.dto.EntryDto.Response;
+import static com.fastcampus.loan.dto.EntryDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +54,33 @@ public class EntryServiceImpl implements EntryService{
             return modelMapper.map(entry, Response.class);
         }
         return null;
+    }
+
+    @Override
+    public UpdateResponse update(Long entryId, Request request) {
+        // entry 유무
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        // before -> after
+        BigDecimal beforeEntryAmount = entry.getEntryAmount();
+        entry.setEntryAmount(request.getEntryAmount());
+
+        entryRepository.save(entry);
+
+        // balance update
+        Long applicationId = entry.getApplicationId();
+        balanceService.update(applicationId, BalanceDto.UpdateRequest.builder()
+                .beforeEntryAmount(beforeEntryAmount)
+                .afterEntryAmount(request.getEntryAmount())
+                .build());
+
+        // response
+        return UpdateResponse.builder()
+                .entryId(entryId)
+                .applicationId(applicationId)
+                .beforeEntryAmount(beforeEntryAmount)
+                .afterEntryAmount(request.getEntryAmount())
+                .build();
     }
 
     private Boolean isApplicationNotContracted(Long applicationId) {

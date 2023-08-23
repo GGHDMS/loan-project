@@ -5,8 +5,7 @@ import com.fastcampus.loan.service.EntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static com.fastcampus.loan.dto.EntryDto.Request;
-import static com.fastcampus.loan.dto.EntryDto.Response;
+import static com.fastcampus.loan.dto.EntryDto.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,4 +23,10 @@ public class InternalController extends AbstractController{
     public ResponseDTO<Response> get(@PathVariable Long applicationId) {
         return ok(entryService.get(applicationId));
     }
+
+    @PutMapping("/entries/{entryId}")
+    public ResponseDTO<UpdateResponse> update(@PathVariable Long entryId, @RequestBody Request request) {
+        return ok(entryService.update(entryId, request));
+    }
 }
+
