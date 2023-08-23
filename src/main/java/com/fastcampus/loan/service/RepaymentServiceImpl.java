@@ -14,10 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static com.fastcampus.loan.dto.RepaymentDto.Request;
-import static com.fastcampus.loan.dto.RepaymentDto.Response;
+import static com.fastcampus.loan.dto.RepaymentDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +59,13 @@ public class RepaymentServiceImpl implements RepaymentService{
         response.setBalance(updatedBalance.getBalance());
 
         return response;
+    }
+
+    @Override
+    public List<ListResponse> getList(Long applicationId) {
+        List<Repayment> repaymentList = repaymentRepository.findAllByApplicationId(applicationId);
+
+        return repaymentList.stream().map(r -> modelMapper.map(r, ListResponse.class)).collect(Collectors.toList());
     }
 
     private boolean isApplicationNotRepayable(Long applicationId) {

@@ -7,6 +7,8 @@ import com.fastcampus.loan.service.RepaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.fastcampus.loan.dto.EntryDto.*;
 
 @RestController
@@ -41,6 +43,11 @@ public class InternalController extends AbstractController{
     @PostMapping("/{applicationId}/repayments")
     public ResponseDTO<RepaymentDto.Response> create(@PathVariable Long applicationId, @RequestBody RepaymentDto.Request request) {
         return ok(repaymentService.create(applicationId, request));
+    }
+
+    @GetMapping("/{applicationId}/repayments")
+    public ResponseDTO<List<RepaymentDto.ListResponse>> getRepayments(@PathVariable Long applicationId) {
+        return ok(repaymentService.getList(applicationId));
     }
 }
 
