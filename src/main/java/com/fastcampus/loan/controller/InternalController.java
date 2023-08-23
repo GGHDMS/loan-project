@@ -14,7 +14,7 @@ import static com.fastcampus.loan.dto.EntryDto.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/internal/applications")
-public class InternalController extends AbstractController{
+public class InternalController extends AbstractController {
 
     private final EntryService entryService;
     private final RepaymentService repaymentService;
@@ -48,6 +48,11 @@ public class InternalController extends AbstractController{
     @GetMapping("/{applicationId}/repayments")
     public ResponseDTO<List<RepaymentDto.ListResponse>> getRepayments(@PathVariable Long applicationId) {
         return ok(repaymentService.getList(applicationId));
+    }
+
+    @PutMapping("/repayments/{repaymentId}")
+    public ResponseDTO<RepaymentDto.UpdateResponse> update(@PathVariable Long repaymentId, @RequestBody RepaymentDto.Request request) {
+        return ok(repaymentService.update(repaymentId, request));
     }
 }
 

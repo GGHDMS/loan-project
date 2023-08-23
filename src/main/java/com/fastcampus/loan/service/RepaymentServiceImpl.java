@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,6 +67,42 @@ public class RepaymentServiceImpl implements RepaymentService{
         List<Repayment> repaymentList = repaymentRepository.findAllByApplicationId(applicationId);
 
         return repaymentList.stream().map(r -> modelMapper.map(r, ListResponse.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public UpdateResponse update(Long repaymentId, Request request) {
+        Repayment repayment = repaymentRepository.findById(repaymentId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        Long applicationId = repayment.getApplicationId();
+
+        BigDecimal beforeRepaymentAmount = repayment.getRepaymentAmount();
+
+        balanceService.repaymentUpdate(applicationId,
+                RepaymentRequest.builder()
+                        .repaymentAmount(beforeRepaymentAmount)
+                        .type(RepaymentRequest.RepaymentType.ADD)
+                        .build()
+        );
+
+        repayment.setRepaymentAmount(request.getRepaymentAmount());
+        repaymentRepository.save(repayment);
+
+        BalanceDto.Response updatedBalace = balanceService.repaymentUpdate(applicationId,
+                RepaymentRequest.builder()
+                        .repaymentAmount(repayment.getRepaymentAmount())
+                        .type(RepaymentRequest.RepaymentType.REMOVE)
+                        .build()
+        );
+
+
+        return UpdateResponse.builder()
+                .applicationId(applicationId)
+                .beforeRepaymentAmount(beforeRepaymentAmount)
+                .afterRepaymentAmount(request.getRepaymentAmount())
+                .balance(updatedBalace.getBalance())
+                .createdAt(repayment.getCreatedAt())
+                .updatedAt(repayment.getUpdatedAt())
+                .build();
     }
 
     private boolean isApplicationNotRepayable(Long applicationId) {

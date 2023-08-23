@@ -42,4 +42,18 @@ public class RepaymentDto implements Serializable {
         private LocalDateTime updatedAt;
     }
 
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateResponse{
+        private Long applicationId;
+        private BigDecimal beforeRepaymentAmount;
+        private BigDecimal afterRepaymentAmount;
+        private BigDecimal balance;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
 }
