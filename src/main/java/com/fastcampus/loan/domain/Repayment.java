@@ -21,10 +21,9 @@ public class Repayment extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Long repaymentId;
+    @Column(nullable = false, updatable = false) private Long repaymentId;
 
-    @Column(columnDefinition = "bigint NOT NULL COMMENT '신청 ID")
+    @Column(columnDefinition = "bigint NOT NULL COMMENT '신청 ID'")
     private Long applicationId;
 
     @Column(columnDefinition = "decimal(15,2) NOT NULL COMMENT '상환 금액'")
