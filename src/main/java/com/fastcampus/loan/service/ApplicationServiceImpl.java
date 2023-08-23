@@ -2,7 +2,6 @@ package com.fastcampus.loan.service;
 
 import com.fastcampus.loan.domain.AcceptTerms;
 import com.fastcampus.loan.domain.Application;
-import com.fastcampus.loan.domain.Judgement;
 import com.fastcampus.loan.domain.Terms;
 import com.fastcampus.loan.dto.ApplicationDto;
 import com.fastcampus.loan.exception.BaseException;
@@ -111,7 +110,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
 
         // 심사 정보 있는지
-        Judgement judgement = judgementRepository.findByApplicationId(applicationId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+        judgementRepository.findByApplicationId(applicationId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
 
         // 승인 금액 > 0
         if (application.getApprovalAmount() == null || application.getApprovalAmount().compareTo(BigDecimal.ZERO) == 0) {

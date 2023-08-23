@@ -26,6 +26,6 @@ public class Balance extends BaseEntity{
     @Column(columnDefinition = "bigint NOT NULL COMMENT '신청 ID'")
     private Long applicationId;
 
-    @Column(columnDefinition = "decimal(15,2) NOT NULL")
+    @Column(columnDefinition = "decimal(15,2) NOT NULL COMMENT '잔여 대출 금액'")
     private BigDecimal balance;
 }
