@@ -83,6 +83,20 @@ public class EntryServiceImpl implements EntryService{
                 .build();
     }
 
+    @Override
+    public void delete(Long entryId) {
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> new BaseException(ResultType.SYSTEM_ERROR));
+
+        entry.setIsDeleted(true);
+
+        entryRepository.save(entry);
+
+        balanceService.update(entry.getApplicationId(), BalanceDto.UpdateRequest.builder()
+                .beforeEntryAmount(entry.getEntryAmount())
+                .afterEntryAmount(BigDecimal.ZERO)
+                .build());
+    }
+
     private Boolean isApplicationNotContracted(Long applicationId) {
         Optional<Application> existed = applicationRepository.findById(applicationId);
         return existed.map(application -> application.getContractedAt() == null).orElse(true);
