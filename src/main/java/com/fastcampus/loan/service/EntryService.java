@@ -5,5 +5,7 @@ import static com.fastcampus.loan.dto.EntryDto.Response;
 
 public interface EntryService {
 
-    Response create(Long application, Request request);
+    Response create(Long applicationId, Request request);
+
+    Response get(Long applicationId);
 }
